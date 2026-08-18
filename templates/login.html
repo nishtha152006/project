@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rupee - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-box">
+            <h1 class="login-title">Rupee</h1>
+            <p class="login-subtitle">Smart Food Demand Forecasting</p>
+            
+            <div id="error-message" class="error-message" style="display:none;"></div>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        placeholder="Enter your username"
+                        required
+                        autocomplete="username"
+                    />
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    />
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    Login
+                </button>
+            </form>
+            
+            <div class="demo-credentials">
+                <h3>Demo Credentials</h3>
+                <div class="credential">
+                    <strong>Admin:</strong>
+                    <p>Username: admin | Password: admin123</p>
+                </div>
+                <div class="credential">
+                    <strong>Kitchen Staff:</strong>
+                    <p>Username: kitchen | Password: kitchen123</p>
+                </div>
+                <div class="credential">
+                    <strong>Recipient:</strong>
+                    <p>Username: recipient1 | Password: recipient123</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>

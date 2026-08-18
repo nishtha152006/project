@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rupee - Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body class="admin-dashboard">
+    <nav class="navbar">
+        <div class="navbar-container">
+            <h1 class="navbar-brand">Rupee Admin</h1>
+            <div class="navbar-right">
+                <span class="user-info">Admin</span>
+                <button id="logout-btn" class="btn btn-secondary">Logout</button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="dashboard-container">
+        <!-- Error message area -->
+        <div id="error-message" class="error-message" style="display:none;"></div>
+        <div id="success-message" class="success-message" style="display:none;"></div>
+        
+        <!-- Latest Surplus Section -->
+        <section class="dashboard-section">
+            <h2>Current Food Status</h2>
+            <div class="status-grid">
+                <div class="status-card">
+                    <h3>Expected Attendance</h3>
+                    <p id="expected-attendance" class="status-value">-</p>
+                </div>
+                <div class="status-card">
+                    <h3>Predicted Demand</h3>
+                    <p id="predicted-demand" class="status-value">-</p>
+                </div>
+                <div class="status-card">
+                    <h3>Recommended Quantity</h3>
+                    <p id="recommended-quantity" class="status-value">-</p>
+                </div>
+            </div>
+            
+            <div class="status-grid">
+                <div class="status-card">
+                    <h3>Prepared Quantity</h3>
+                    <p id="prepared-quantity" class="status-value">-</p>
+                </div>
+                <div class="status-card">
+                    <h3>Consumed Quantity</h3>
+                    <p id="consumed-quantity" class="status-value">-</p>
+                </div>
+                <div class="status-card">
+                    <h3>Surplus Quantity</h3>
+                    <p id="surplus-quantity" class="status-value">-</p>
+                </div>
+            </div>
+            
+            <div class="status-grid">
+                <div class="status-card">
+                    <h3>Storage Temperature</h3>
+                    <p id="storage-temperature" class="status-value">-</p>
+                </div>
+                <div class="status-card">
+                    <h3>Storage Time</h3>
+                    <p id="storage-time" class="status-value">-</p>
+                </div>
+                <div class="status-card">
+                    <h3>Food Safety Status</h3>
+                    <p id="safety-status" class="status-value status-safe">-</p>
+                </div>
+                <div class="status-card">
+                    <h3>Status</h3>
+                    <p id="food-status" class="status-value">-</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Impact Metrics Section -->
+        <section class="dashboard-section">
+            <h2>Impact Metrics</h2>
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <h3>Food Saved (kg)</h3>
+                    <p id="food-saved" class="impact-value">0</p>
+                </div>
+                <div class="impact-card">
+                    <h3>Cost Saved (₹)</h3>
+                    <p id="cost-saved" class="impact-value">0</p>
+                </div>
+                <div class="impact-card">
+                    <h3>Carbon Saved (kg CO₂)</h3>
+                    <p id="carbon-saved" class="impact-value">0</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>Recipient Request Summary</h2>
+            <div class="status-grid">
+                <div class="status-card">
+                    <h3>Pending</h3>
+                    <p id="pending-request-count" class="status-value">0</p>
+                </div>
+                <div class="status-card">
+                    <h3>Approved</h3>
+                    <p id="approved-request-count" class="status-value">0</p>
+                </div>
+                <div class="status-card">
+                    <h3>Rejected</h3>
+                    <p id="rejected-request-count" class="status-value">0</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Charts Section -->
+        <section class="dashboard-section">
+            <h2>Analytics</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Predicted vs Actual vs Consumed</h3>
+                    <canvas id="demand-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Food Surplus Over Time</h3>
+                    <canvas id="surplus-chart"></canvas>
+                </div>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Recipient Requests by Status</h3>
+                    <canvas id="requests-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Redistribution Impact</h3>
+                    <canvas id="redistribution-chart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Pending Requests Section -->
+        <section class="dashboard-section">
+            <h2>Pending Recipient Requests</h2>
+            <div class="table-container">
+                <table id="pending-requests-table" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Recipient</th>
+                            <th>Requested Quantity (kg)</th>
+                            <th>Available (kg)</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="7" class="no-data">No pending requests</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

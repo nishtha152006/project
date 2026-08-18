@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rupee - Kitchen Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="kitchen-dashboard">
+    <nav class="navbar">
+        <div class="navbar-container">
+            <h1 class="navbar-brand">Rupee Kitchen</h1>
+            <div class="navbar-right">
+                <span class="user-info">Kitchen Staff</span>
+                <button id="logout-btn" class="btn btn-secondary">Logout</button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="dashboard-container">
+        <!-- Error message area -->
+        <div id="error-message" class="error-message" style="display:none;"></div>
+        <div id="success-message" class="success-message" style="display:none;"></div>
+        
+        <div class="kitchen-layout">
+            <!-- Left column: Calendar and Location -->
+            <div class="kitchen-sidebar">
+                <!-- Meal Planning Calendar -->
+                <section class="dashboard-section">
+                    <h2>Meal Planning Calendar</h2>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button id="prev-month-btn" class="btn btn-small">← Previous</button>
+                            <h3 id="calendar-month-year"></h3>
+                            <button id="next-month-btn" class="btn btn-small">Next →</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div class="weekday">Sun</div>
+                            <div class="weekday">Mon</div>
+                            <div class="weekday">Tue</div>
+                            <div class="weekday">Wed</div>
+                            <div class="weekday">Thu</div>
+                            <div class="weekday">Fri</div>
+                            <div class="weekday">Sat</div>
+                        </div>
+                        <div id="calendar-dates" class="calendar-dates"></div>
+                    </div>
+                </section>
+                
+                <!-- Current Location -->
+                <section class="dashboard-section">
+                    <h2>Current Location</h2>
+                    <button id="location-btn" class="btn btn-primary btn-block">
+                        Use My Location
+                    </button>
+                    <div id="location-info" style="display:none;">
+                        <p><strong>Latitude:</strong> <span id="latitude">-</span></p>
+                        <p><strong>Longitude:</strong> <span id="longitude">-</span></p>
+                        <div id="map-container" style="margin-top: 10px;">
+                            <iframe 
+                                id="map-frame" 
+                                width="100%" 
+                                height="300" 
+                                style="border:1px solid #ddd; border-radius: 4px;"
+                                loading="lazy"
+                                allowfullscreen=""
+                            ></iframe>
+                        </div>
+                    </div>
+                    <div id="location-error" style="display:none;" class="info-message"></div>
+                </section>
+            </div>
+            
+            <!-- Right column: Kitchen Form -->
+            <div class="kitchen-main">
+                <!-- Kitchen Data Entry Form -->
+                <section class="dashboard-section">
+                    <h2>Enter Today's Kitchen Data</h2>
+                    <form id="kitchen-form" class="kitchen-form">
+                        <!-- Forecast Section -->
+                        <fieldset>
+                            <legend>Forecast Information</legend>
+                            
+                            <div class="form-group">
+                                <label for="forecast-date">Forecast Date *</label>
+                                <input 
+                                    type="date" 
+                                    id="forecast-date" 
+                                    name="forecast_date"
+                                    required
+                                />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="expected-attendance">Expected Attendance (people) *</label>
+                                <input 
+                                    type="number" 
+                                    id="expected-attendance" 
+                                    name="expected_attendance"
+                                    min="1"
+                                    placeholder="e.g., 200"
+                                    required
+                                />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="weather-conditions">Weather Conditions *</label>
+                                <select id="weather-conditions" name="weather_conditions" required>
+                                    <option value="">Select weather</option>
+                                    <option value="sunny">Sunny</option>
+                                    <option value="cloudy">Cloudy</option>
+                                    <option value="rainy">Rainy</option>
+                                    <option value="cold">Cold</option>
+                                    <option value="hot">Hot</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="event-type">Event Type *</label>
+                                <select id="event-type" name="event_type" required>
+                                    <option value="">Select event</option>
+                                    <option value="regular">Regular Day</option>
+                                    <option value="festival">Festival</option>
+                                    <option value="exam">Exam Day</option>
+                                    <option value="holiday">Holiday</option>
+                                    <option value="special">Special Event</option>
+                                </select>
+                            </div>
+                        </fieldset>
+                        
+                        <!-- Forecast Results (Read-only) -->
+                        <fieldset>
+                            <legend>Forecast Results (Auto-calculated)</legend>
+                            
+                            <div class="form-group">
+                                <label for="predicted-demand">Predicted Meal Demand (kg)</label>
+                                <input 
+                                    type="number" 
+                                    id="predicted-demand" 
+                                    name="predicted_demand"
+                                    readonly
+                                    step="0.01"
+                                />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="recommended-quantity">Recommended Preparation Quantity (kg)</label>
+                                <input 
+                                    type="number" 
+                                    id="recommended-quantity" 
+                                    name="recommended_quantity"
+                                    readonly
+                                    step="0.01"
+                                />
+                            </div>
+                        </fieldset>
+                        
+                        <!-- Actual Quantities Section -->
+                        <fieldset>
+                            <legend>Actual Quantities</legend>
+                            
+                            <div class="form-group">
+                                <label for="prepared-quantity">Actual Prepared Quantity (kg) *</label>
+                                <input 
+                                    type="number" 
+                                    id="prepared-quantity" 
+                                    name="prepared_quantity"
+                                    min="0"
+                                    step="0.01"
+                                    placeholder="e.g., 250"
+                                    required
+                                />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="consumed-quantity">Actual Consumed Quantity (kg) *</label>
+                                <input 
+                                    type="number" 
+                                    id="consumed-quantity" 
+                                    name="consumed_quantity"
+                                    min="0"
+                                    step="0.01"
+                                    placeholder="e.g., 200"
+                                    required
+                                />
+                            </div>
+                        </fieldset>
+                        
+                        <!-- Storage Section -->
+                        <fieldset>
+                            <legend>Food Storage</legend>
+                            
+                            <div class="form-group">
+                                <label for="storage-time">Storage Time (HH:MM) *</label>
+                                <input 
+                                    type="text" 
+                                    id="storage-time" 
+                                    name="storage_time"
+                                    placeholder="HH:MM (e.g., 02:30)"
+                                    pattern="([0-9]{1,2}):([0-9]{2})"
+                                    required
+                                />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="storage-temperature">Storage Temperature (°C) *</label>
+                                <input 
+                                    type="number" 
+                                    id="storage-temperature" 
+                                    name="storage_temperature"
+                                    step="0.1"
+                                    placeholder="e.g., 4 (refrigerated) or -18 (frozen)"
+                                    required
+                                />
+                            </div>
+                        </fieldset>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            Save Kitchen Data
+                        </button>
+                    </form>
+                </section>
+                
+                <!-- Latest Record -->
+                <section class="dashboard-section">
+                    <h2>Latest Record</h2>
+                    <div id="latest-record" class="latest-record">
+                        <p>No records yet</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kitchen.js') }}"></script>
+</body>
+</html>
